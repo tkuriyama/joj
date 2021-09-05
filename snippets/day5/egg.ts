@@ -16,20 +16,20 @@ type EggExpr
 
 
 type ValueToken
-    = { type: Value, value: string | number }
+    = { type: ValueType, value: Value }
 
 type WordToken
-    = { type: Word, name: string }
+    = { type: WordType, name: string }
 
 type ApplyExpr
-    = { type: Apply, operator: WordToken, args: Array<EggExpr> }
+    = { type: ApplyType, operator: WordToken, args: Array<EggExpr> }
 
 
-type Apply = "apply";
+type ApplyType = "apply";
+type ValueType = "value";
+type WordType = "word";
 
-type Value = "value";
-
-type Word = "word";
+type Value = number | string
 
 
 /*----------------------------------------------------------------------------*/
@@ -215,9 +215,28 @@ for (let op of ["+", "-", "*", "/", "==", "<", ">"]) {
 }
 
 
-topScope.print = (value: string | number) => {
+topScope.print = (value: Value) => {
     console.log(value);
     return value;
+};
+
+
+// Arrays
+
+topScope.array = (...vals: Array<Value>): Array<Value> => {
+    return vals;
+}
+
+topScope.length = (arr: Array<Value>): number => {
+    return arr.length;
+}
+
+topScope.element = (arr: Array<Value>, i: number): Value => {
+    const val = arr[i];
+    if (val === undefined) {
+        throw new RangeError(`${i} is out of range of array ${arr}`);
+    }
+    return val;
 };
 
 
@@ -269,3 +288,15 @@ do(define(pow, fun(base, exp,
    print(pow(2, 10)))
 `);
 
+
+console.log("Test array, expected output 6:");
+run(`
+do(define(sum, fun(array,
+     do(define(i, 0),
+        define(sum, 0),
+        while(<(i, length(array)),
+          do(define(sum, +(sum, element(array, i))),
+             define(i, +(i, 1)))),
+        sum))),
+   print(sum(array(1, 2, 3))))
+`);

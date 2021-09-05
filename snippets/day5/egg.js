@@ -158,6 +158,24 @@ topScope.print = function (value) {
     console.log(value);
     return value;
 };
+// Arrays
+topScope.array = function () {
+    var vals = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        vals[_i] = arguments[_i];
+    }
+    return vals;
+};
+topScope.length = function (arr) {
+    return arr.length;
+};
+topScope.element = function (arr, i) {
+    var val = arr[i];
+    if (val === undefined) {
+        throw new RangeError(i + " is out of range of " + arr);
+    }
+    return val;
+};
 /*----------------------------------------------------------------------------*/
 // Test
 // Parse simple expr
@@ -176,3 +194,5 @@ console.log("Run function, expected output 11");
 run("\ndo(define(plusOne, fun(a, +(a, 1))),\n   print(plusOne(10)))\n");
 console.log("Run function, expected output 1024");
 run("\ndo(define(pow, fun(base, exp,\n     if(==(exp, 0),\n        1,\n        *(base, pow(base, -(exp, 1)))))),\n   print(pow(2, 10)))\n");
+console.log("Test array, expected output 6:");
+run("\ndo(define(sum, fun(array,\n     do(define(i, 0),\n        define(sum, 0),\n        while(<(i, 5),\n          do(define(sum, +(sum, element(array, i))),\n             define(i, +(i, 1)))),\n        sum))),\n   print(sum(array(1, 2, 3))))\n");
