@@ -39,7 +39,7 @@ type Value = number | string
 function parse(program: string): EggExpr {
     let { expr, rest } = parseExpression(program);
     if (skipSpace(rest).length > 0) {
-        throw new SyntaxError("Unexpected text after program");
+        throw new SyntaxError(`Unexpected text ${rest} after program`);
     }
     return expr;
 }
@@ -194,9 +194,18 @@ specialForms.fun = (args: Array<EggExpr>, scope: object) => {
 // Helpers
 
 
-function skipSpace(s: string) {
-    let first = s.search(/\S/);
-    return (first == -1) ? "" : s.slice(first);
+function skipSpace(s: string): string {
+    const firstChar = s.search(/\S/);
+    if (firstChar == -1) {
+        return "";
+    } else {
+        const s_ = s.slice(firstChar)
+        if (s_[0] == '#') {
+            return skipSpace(s_.slice(s_.search(/\n/) + 1));
+        } else {
+            return s_;
+        }
+    }
 }
 
 
@@ -300,3 +309,13 @@ do(define(sum, fun(array,
         sum))),
    print(sum(array(1, 2, 3))))
 `);
+
+
+// comments
+console.log(parse("# hello\nx"));
+// → {type: "word", name: "x"}
+
+console.log(parse("a # one\n   # two\n()"));
+// → {type: "apply",
+//    operator: {type: "word", name: "a"},
+//    args: []}

@@ -5,7 +5,7 @@
 function parse(program) {
     var _a = parseExpression(program), expr = _a.expr, rest = _a.rest;
     if (skipSpace(rest).length > 0) {
-        throw new SyntaxError("Unexpected text after program");
+        throw new SyntaxError("Unexpected text " + rest + " after program");
     }
     return expr;
 }
@@ -142,8 +142,19 @@ specialForms.fun = function (args, scope) {
 /*----------------------------------------------------------------------------*/
 // Helpers
 function skipSpace(s) {
-    var first = s.search(/\S/);
-    return (first == -1) ? "" : s.slice(first);
+    var firstChar = s.search(/\S/);
+    if (firstChar == -1) {
+        return "";
+    }
+    else {
+        var s_ = s.slice(firstChar);
+        if (s_[0] == '#') {
+            return skipSpace(s_.slice(s_.search(/\n/) + 1));
+        }
+        else {
+            return s_;
+        }
+    }
 }
 /*----------------------------------------------------------------------------*/
 // Global Scope
@@ -172,7 +183,7 @@ topScope.length = function (arr) {
 topScope.element = function (arr, i) {
     var val = arr[i];
     if (val === undefined) {
-        throw new RangeError(i + " is out of range of " + arr);
+        throw new RangeError(i + " is out of range of array " + arr);
     }
     return val;
 };
@@ -195,4 +206,11 @@ run("\ndo(define(plusOne, fun(a, +(a, 1))),\n   print(plusOne(10)))\n");
 console.log("Run function, expected output 1024");
 run("\ndo(define(pow, fun(base, exp,\n     if(==(exp, 0),\n        1,\n        *(base, pow(base, -(exp, 1)))))),\n   print(pow(2, 10)))\n");
 console.log("Test array, expected output 6:");
-run("\ndo(define(sum, fun(array,\n     do(define(i, 0),\n        define(sum, 0),\n        while(<(i, 5),\n          do(define(sum, +(sum, element(array, i))),\n             define(i, +(i, 1)))),\n        sum))),\n   print(sum(array(1, 2, 3))))\n");
+run("\ndo(define(sum, fun(array,\n     do(define(i, 0),\n        define(sum, 0),\n        while(<(i, length(array)),\n          do(define(sum, +(sum, element(array, i))),\n             define(i, +(i, 1)))),\n        sum))),\n   print(sum(array(1, 2, 3))))\n");
+// comments
+console.log(parse("# hello\nx"));
+// → {type: "word", name: "x"}
+console.log(parse("a # one\n   # two\n()"));
+// → {type: "apply",
+//    operator: {type: "word", name: "a"},
+//    args: []}
