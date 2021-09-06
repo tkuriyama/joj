@@ -139,6 +139,24 @@ specialForms.fun = function (args, scope) {
         return evaluate(body, localScope);
     };
 };
+specialForms.set = function (args, scope) {
+    if (args.length != 2 || args[0].type != "word") {
+        throw new SyntaxError("Incorrect use of set");
+    }
+    else {
+        var name_1 = args[0].name;
+        var val = evaluate(args[1], scope);
+        while (!Object.prototype.hasOwnProperty.call(scope, name_1)) {
+            if (Object.getPrototypeOf(scope) === null) {
+                throw new ReferenceError("Could not find property " + name_1 + " to set with " + val);
+            }
+            else {
+                scope = Object.getPrototypeOf(scope);
+            }
+        }
+        scope[name_1] = val;
+    }
+};
 /*----------------------------------------------------------------------------*/
 // Helpers
 function skipSpace(s) {
@@ -214,3 +232,12 @@ console.log(parse("a # one\n   # two\n()"));
 // → {type: "apply",
 //    operator: {type: "word", name: "a"},
 //    args: []}
+// `set` and scope
+console.log("Expected output 50:");
+run("\ndo(define(x, 4),\n   define(setx, fun(val, set(x, val))),\n   setx(50),\n   print(x))\n");
+try {
+    run("set(quux, true)");
+}
+catch (err) {
+    console.log("Expected ReferenceError, observed: " + err);
+}

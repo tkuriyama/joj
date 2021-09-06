@@ -188,7 +188,23 @@ specialForms.fun = (args: Array<EggExpr>, scope: object) => {
     };
 };
 
+specialForms.set = (args: Array<EggExpr>, scope: object) => {
+    if (args.length != 2 || args[0].type != "word") {
+        throw new SyntaxError("Incorrect use of set");
+    } else {
+        const name = args[0].name;
+        const val = evaluate(args[1], scope);
 
+        while (!Object.prototype.hasOwnProperty.call(scope, name)) {
+            if (Object.getPrototypeOf(scope) === null) {
+                throw new ReferenceError(`Could not find property ${name} to set with ${val}`);
+            } else {
+                scope = Object.getPrototypeOf(scope);
+            }
+        }
+        scope[name] = val;
+    }
+};
 
 /*----------------------------------------------------------------------------*/
 // Helpers
@@ -319,3 +335,22 @@ console.log(parse("a # one\n   # two\n()"));
 // → {type: "apply",
 //    operator: {type: "word", name: "a"},
 //    args: []}
+
+// `set` and scope
+
+console.log("Expected output 50:");
+run(`
+do(define(x, 4),
+   define(setx, fun(val, set(x, val))),
+   setx(50),
+   print(x))
+`);
+
+
+try {
+    run(`set(quux, true)`);
+}
+catch (err) {
+    console.log(`Expected ReferenceError, observed: ${err}`);
+}
+
