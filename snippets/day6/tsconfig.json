@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "lib": ["dom", "es2017"],
+        "target": "esnext",
+        "module": "es2020",
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "noImplicitAny": true,
+        "strictNullChecks": true
+    },
+    "$schema": "https://json.schemastore.org/tsconfig",
+    "display": "Recommended"
+}
