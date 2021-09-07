@@ -1,0 +1,13 @@
+<html>
+  <head><title>Game</title>
+    <link rel="stylesheet" href="game.css">
+  </head>
+  <body>
+    <script src="game.js"></script>
+    <script>
+      // let simpleLevel = new Level(simpleLevelPlan);
+      const display = new DOMDisplay(document.body, simpleLevel);
+      display.syncState(State.start(simpleLevel));
+    </script>
+  </body>
+  </html>
