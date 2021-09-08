@@ -28,6 +28,7 @@ export default function Todo(props) {
         id={props.id}
         className="todo-text"
         type="text"
+        value={props.name}
         onChange={handleChange}
         />
         </div>

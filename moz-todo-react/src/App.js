@@ -20,12 +20,10 @@ const FILTER_NAMES = Object.keys(FILTER_MAP);
 
 /*----------------------------------------------------------------------------*/
 
-function App(props) {
+function App() {
 
     // state
     const [tasks, setTasks] = useLocalStorage("tasks", [])
-
-    //props.tasks);
     const [filter, setFilter] = useState('All');
 
     // task list

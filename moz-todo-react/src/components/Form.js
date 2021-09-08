@@ -23,7 +23,8 @@ export default function Form(props) {
         What item do you want to track?
         </label>
         </h2>
-        <input
+            <input
+        placeholder="Item Name"
         type="text"
         id="new-todo-input"
         className="input input__lg"
