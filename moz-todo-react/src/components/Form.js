@@ -20,7 +20,7 @@ export default function Form(props) {
         <form onSubmit={handleSubmit}>
         <h2 className="label-wrapper">
         <label htmlFor="new-todo-input" className="label__lg">
-        What needs to be done?
+        What item do you want to track?
         </label>
         </h2>
         <input
