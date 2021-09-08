@@ -9,9 +9,37 @@ export default App;
 
 /*----------------------------------------------------------------------------*/
 
+const FILTER_MAP = {
+    All: () => true,
+    Active: task => !task.completed,
+    Completed: task => task.completed
+};
+
+const FILTER_NAMES = Object.keys(FILTER_MAP);
+
+
 function App(props) {
 
+    // state
     const [tasks, setTasks] = useState(props.tasks);
+    const [filter, setFilter] = useState('All');
+
+    // task list
+
+    const taskList = tasks
+        .filter(FILTER_MAP[filter])
+        .map(task =>
+        <Todo
+        name={task.name}
+        id={task.id}
+        key={task.id}
+        completed={task.completed}
+        toggleTaskCompleted={toggleTaskCompleted}
+        editTask={editTask}
+        deleteTask={deleteTask}
+        />);
+
+    // add
 
     function addTask(name) {
         const newTask = {
@@ -22,24 +50,15 @@ function App(props) {
         setTasks([...tasks, newTask]);
     };
 
-    const taskList = tasks.map(task =>
-        <Todo
-        name={task.name}
-        id={task.id}
-        completed={task.completed}
-        key={task.id}
-        toggleTaskCompleted={toggleTaskCompleted}
-        deleteTask={deleteTask}
-        />);
-
-
-    function toggleTaskCompleted(id) {
-        const updatedTasks = tasks.map(task => {
-            return (task.id === id) ? {...task, completed: !task.completed} : task
+    // edit
+    function editTask(id, newName) {
+        const editedTaskList = tasks.map(task => {
+            return (id === task.id) ? {...task, name: newName} : task;
         });
-        setTasks(updatedTasks);
+        setTasks(editedTaskList);
     }
 
+    // delete
     function deleteTask(id) {
         const updatedTasks = tasks.filter(task => {
             return (task.id !== id)
@@ -48,8 +67,31 @@ function App(props) {
     }
 
 
+    // checkbox 
+    function toggleTaskCompleted(id) {
+        const updatedTasks = tasks.map(task => {
+            return (task.id === id) ? {...task, completed: !task.completed} : task
+        });
+        setTasks(updatedTasks);
+        }
+
+    // task count
+
     const tasksNoun = taskList.length !== 1 ? 'tasks' : 'task';
     const headingText = `${taskList.length} ${tasksNoun} remaining`;
+
+    // Filter button
+
+    const filterList = FILTER_NAMES.map(name => (
+        <FilterButton
+        key={name}
+        name={name}
+        isPressed={name === filter}
+        setFilter={setFilter}
+        />
+    ));
+
+    // App
 
     return (
         <div className="todoapp stack-large">
@@ -57,9 +99,9 @@ function App(props) {
         <Form onSubmit={addTask}/>
 
         <div className="filters btn-group stack-exception">
-        <FilterButton />
-        <FilterButton />
-        <FilterButton />
+
+        {filterList}
+
         </div>
 
         <h2 id="list-heading">
