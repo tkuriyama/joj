@@ -18,10 +18,14 @@ const FILTER_MAP = {
 const FILTER_NAMES = Object.keys(FILTER_MAP);
 
 
+/*----------------------------------------------------------------------------*/
+
 function App(props) {
 
     // state
-    const [tasks, setTasks] = useState(props.tasks);
+    const [tasks, setTasks] = useLocalStorage("tasks", [])
+
+    //props.tasks);
     const [filter, setFilter] = useState('All');
 
     // task list
@@ -118,3 +122,32 @@ function App(props) {
 }
 
 
+
+/*----------------------------------------------------------------------------*/
+
+// Hook
+function useLocalStorage(key, initialValue) {
+
+    const [storedValue, setStoredValue] = useState(() => {
+
+        try {
+            const item = window.localStorage.getItem(key);
+            return item ? JSON.parse(item) : initialValue;
+        } catch (error) {
+            console.log(error);
+            return initialValue;
+        }
+    });
+
+    const setValue = (value) => {
+        try {
+            const valueToStore =
+                value instanceof Function ? value(storedValue) : value;
+            setStoredValue(valueToStore);
+            window.localStorage.setItem(key, JSON.stringify(valueToStore));
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    return [storedValue, setValue];
+}
