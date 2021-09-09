@@ -121,9 +121,7 @@ function App() {
         <Form onSubmit={addTask}/>
 
         <div className="filters btn-group stack-exception">
-
         {filterList}
-
         </div>
 
         <ul className="todo-list stack-large stack-exception"
