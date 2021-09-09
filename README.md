@@ -1,7 +1,7 @@
 
 A collection of exercises from learning JavaScript.
 
-See the [blog series on learning JavaScript in ten days](https://tkuriyama.github.io/javascript/2021/08/31/js-in-7days-day1.html).
+See the [blog series on learning JavaScript in ten days](https://tkuriyama.github.io/javascript/2021/09/10/js-in-10-days-review.html).
 
 ## joj
 
