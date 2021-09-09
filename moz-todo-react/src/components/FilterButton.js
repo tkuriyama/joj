@@ -13,7 +13,8 @@ export default function FilterButton(props) {
       onClick={() => props.setFilter(props.name)}
     >
       <span className="visually-hidden">Show </span>
-      <span>{props.name}</span>
+      <span>{props.name} ({props.length})
+      </span>
       <span className="visually-hidden"> tasks</span>
     </button>
   );
