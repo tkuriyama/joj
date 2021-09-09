@@ -11,9 +11,9 @@ export default App;
 
 const FILTER_MAP = {
     All: () => true,
-    Wishlist: task => task.wishlist,
-    Purchased: task => task.purchased,
-    Archived: task => task.archived
+    Wishlist: task => task.statusName === "Wishlist",
+    Purchased: task => task.statusName === "Purchased",
+    Archived: task => task.statusName === "Archived"
 };
 
 const FILTER_NAMES = Object.keys(FILTER_MAP);
@@ -36,9 +36,7 @@ function App() {
             name={task.name}
             id={task.id}
             key={task.id}
-            wishlist={task.wishlist}
-            purchased={task.purchased}
-            archived={task.archived}
+            statusNamed={task.statusName}
             toggleTaskStatus={toggleTaskStatus}
             editTask={editTask}
             deleteTask={deleteTask}
@@ -50,9 +48,7 @@ function App() {
         const newTask = {
             id: "todo-" + nanoid(),
             name: name,
-            wishlist: true,
-            purchased: false,
-            archived: false
+            statusName: "Wishlist"
         };
         setTasks([...tasks, newTask]);
     };
@@ -80,15 +76,7 @@ function App() {
             if (task.id !== id) {
                 return task;
             } else {
-                if (statusName === "Wishlist") {
-                    return {...task, wishlist: true, purchased: false, archived: false};
-                } else if (statusName === "Purchased") {
-                        return {...task, wishlist: false, purchased: true, archived: false};
-                    } else if (statusName === "Archived") {
-                        return {...task, wishlist: false, purchased: false, archived: true};
-                } else {
-                    return task;
-                }
+                return {...task, statusName: statusName};
             }
         });
         setTasks(updatedTasks);

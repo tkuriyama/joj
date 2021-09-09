@@ -92,8 +92,7 @@ export default function Todo(props) {
 
         <select
         onChange={handleStatusChange}
-        value={props.wishlist ? "Wishlist" :
-               (props.purchased ? "Purchased" : "Archived")}
+        value={props.statusName}
         >
         <option
         value="Wishlist"
