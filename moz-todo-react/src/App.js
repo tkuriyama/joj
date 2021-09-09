@@ -12,6 +12,8 @@ export default App;
 const FILTER_MAP = {
     All: () => true,
     Wishlist: task => task.wishlist,
+    Purchased: task => task.purchased,
+    Archived: task => task.archived
 };
 
 const FILTER_NAMES = Object.keys(FILTER_MAP);
@@ -31,14 +33,16 @@ function App() {
         .filter(FILTER_MAP[filter])
         .map(task =>
         <Todo
-        name={task.name}
-        id={task.id}
-        key={task.id}
-        wishlist={task.wishlist}
-        toggleTaskWishlist={toggleTaskWishlist}
-        editTask={editTask}
-        deleteTask={deleteTask}
-        />);
+            name={task.name}
+            id={task.id}
+            key={task.id}
+            wishlist={task.wishlist}
+            purchased={task.purchased}
+            archjived={task.archived}
+            toggleTaskWishlist={toggleTaskWishlist}
+            editTask={editTask}
+            deleteTask={deleteTask}
+            />);
 
     // add
 
@@ -46,7 +50,9 @@ function App() {
         const newTask = {
             id: "todo-" + nanoid(),
             name: name,
-            wishlist: true
+            wishlist: true,
+            purchased: false,
+            archived: false
         };
         setTasks([...tasks, newTask]);
     };
