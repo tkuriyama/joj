@@ -25,7 +25,7 @@ function App() {
 
     // state
     const [tasks, setTasks] = useLocalStorage("tasks", [])
-    const [filter, setFilter] = useState('All');
+    const [filter, setFilter] = useState('Wishlist');
 
     // task list
 
@@ -96,10 +96,13 @@ function App() {
 
     // task count
 
-    const tasksNoun = taskList.length !== 1 ? 'tasks' : 'task';
-    const headingText = `${taskList.length} ${tasksNoun} remaining`;
-
     // Filter button
+
+    function getFilterSize(filterName) {
+        return tasks
+            .filter(FILTER_MAP[filterName])
+            .length
+    }
 
     const filterList = FILTER_NAMES.map(name => (
         <FilterButton
@@ -107,6 +110,7 @@ function App() {
         name={name}
         isPressed={name === filter}
         setFilter={setFilter}
+        length={getFilterSize(name)}
         />
     ));
 
@@ -121,10 +125,6 @@ function App() {
         {filterList}
 
         </div>
-
-        <h2 id="list-heading">
-        {headingText}
-        </h2>
 
         <ul className="todo-list stack-large stack-exception"
         aria-labelledby="list-heading">
