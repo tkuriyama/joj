@@ -17,21 +17,32 @@ export default function Todo(props) {
         setEditing(false);
     }
 
-    // templates
+    function tryAutofill(e) {
+        if (e.target.value === "" && e.keyCode === 9) {
+            e.preventDefault();
+            const text =
+                e.target.placeholder.split(" (press")[0]
+            e.target.value = text;
+            setNewName(e.target.placeholder);
+        }
+    }
+
+    // Edit
+
     const editingTemplate = (
         <form className="stack-small" onSubmit={handleSubmit}>
         <div className="form-group">
-        <label className="todo-label" htmlFor={props.id}>
-        New name for {props.name}
-        </label>
+
         <input
         id={props.id}
-        className="todo-text"
+        className="todo-edittext"
         type="text"
-        value={props.name}
+        placeholder={props.name + " (press tab to fill"}
         onChange={handleChange}
+        onKeyDown={tryAutofill}
         />
         </div>
+
         <div className="btn-group">
         <button
         type="button"
@@ -40,6 +51,7 @@ export default function Todo(props) {
         Cancel
         <span className="visually-hidden">renaming {props.name}</span>
         </button>
+
         <button
         type="submit"
         className="btn btn__primary todo-edit"
@@ -51,16 +63,13 @@ export default function Todo(props) {
         </form>
     );
 
+    // View
+
     const viewTemplate = (
         <div className="stack-small">
-        <div className="c-cb">
-        <input
-        id={props.id}
-        type="checkbox"
-        defaultChecked={props.completed}
-        onChange={() => props.toggleTaskCompleted(props.id)}
-        />
-        <label className="todo-label" htmlFor={props.id}>
+        <div className="todo-item">
+
+        <label className="todo-text" htmlFor={props.id}>
         {props.name}
         </label>
         </div>
@@ -79,6 +88,17 @@ export default function Todo(props) {
         </div>
     );
 
+    // Todo 
+
     return <li className="todo">{isEditing ? editingTemplate : viewTemplate}</li>;
 
 };
+
+
+
+/* <input
+ * id={props.id}
+ * type="checkbox"
+ * defaultChecked={props.wishlist}
+ * onChange={() => props.toggleTaskWishlist(props.id)}
+   /> */

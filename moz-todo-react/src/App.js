@@ -11,8 +11,7 @@ export default App;
 
 const FILTER_MAP = {
     All: () => true,
-    Active: task => !task.completed,
-    Completed: task => task.completed
+    Wishlist: task => task.wishlist,
 };
 
 const FILTER_NAMES = Object.keys(FILTER_MAP);
@@ -35,8 +34,8 @@ function App() {
         name={task.name}
         id={task.id}
         key={task.id}
-        completed={task.completed}
-        toggleTaskCompleted={toggleTaskCompleted}
+        wishlist={task.wishlist}
+        toggleTaskWishlist={toggleTaskWishlist}
         editTask={editTask}
         deleteTask={deleteTask}
         />);
@@ -47,7 +46,7 @@ function App() {
         const newTask = {
             id: "todo-" + nanoid(),
             name: name,
-            completed: false
+            wishlist: true
         };
         setTasks([...tasks, newTask]);
     };
@@ -69,10 +68,10 @@ function App() {
     }
 
 
-    // checkbox 
-    function toggleTaskCompleted(id) {
+    // checkbox
+    function toggleTaskWishlist(id) {
         const updatedTasks = tasks.map(task => {
-            return (task.id === id) ? {...task, completed: !task.completed} : task
+            return (task.id === id) ? {...task, wishlist: !task.wishlist} : task
         });
         setTasks(updatedTasks);
         }
