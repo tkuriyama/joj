@@ -27,14 +27,18 @@ export default function Todo(props) {
         }
     }
 
-    // Edit
+    function handleStatusChange(e) {
+        props.toggleTaskStatus(props.id, e.target.value);
+    }
 
-    const editingTemplate = (
-        <form className="stack-small" onSubmit={handleSubmit}>
-        <div className="form-group">
+            // Edit
 
-        <input
-        id={props.id}
+            const editingTemplate = (
+                <form className="stack-small" onSubmit={handleSubmit}>
+                <div className="form-group">
+
+                <input
+                id={props.id}
         className="todo-edittext"
         type="text"
         placeholder={props.name + " (press tab to fill"}
@@ -50,7 +54,7 @@ export default function Todo(props) {
         onClick={() => setEditing(false)}>
         Cancel
         <span className="visually-hidden">renaming {props.name}</span>
-        </button>
+        </button>q
 
         <button
         type="submit"
@@ -77,6 +81,7 @@ export default function Todo(props) {
         <button type="button" className="btn" onClick={() => setEditing(true)}>
         Edit <span className="visually-hidden">{props.name}</span>
         </button>
+
         <button
         type="button"
         className="btn btn__danger"
@@ -84,7 +89,29 @@ export default function Todo(props) {
         >
         Delete <span className="visually-hidden">{props.name}</span>
         </button>
+
+        <select
+        onChange={handleStatusChange}
+        value={props.wishlist ? "Wishlist" :
+               (props.purchased ? "Purchased" : "Archived")}
+        >
+        <option
+        value="Wishlist"
+        >
+        Wishlist
+        </option>
+        <option
+        value="Purchased"
+        >
+        Purchased
+        </option>
+        <option
+        value="Archived"
+        >
+        Archived</option>
+        </select>
         </div>
+
         </div>
     );
 

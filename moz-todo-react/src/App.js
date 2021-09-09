@@ -38,8 +38,8 @@ function App() {
             key={task.id}
             wishlist={task.wishlist}
             purchased={task.purchased}
-            archjived={task.archived}
-            toggleTaskWishlist={toggleTaskWishlist}
+            archived={task.archived}
+            toggleTaskStatus={toggleTaskStatus}
             editTask={editTask}
             deleteTask={deleteTask}
             />);
@@ -75,9 +75,21 @@ function App() {
 
 
     // checkbox
-    function toggleTaskWishlist(id) {
+    function toggleTaskStatus(id, statusName) {
         const updatedTasks = tasks.map(task => {
-            return (task.id === id) ? {...task, wishlist: !task.wishlist} : task
+            if (task.id !== id) {
+                return task;
+            } else {
+                if (statusName === "Wishlist") {
+                    return {...task, wishlist: true, purchased: false, archived: false};
+                } else if (statusName === "Purchased") {
+                        return {...task, wishlist: false, purchased: true, archived: false};
+                    } else if (statusName === "Archived") {
+                        return {...task, wishlist: false, purchased: false, archived: true};
+                } else {
+                    return task;
+                }
+            }
         });
         setTasks(updatedTasks);
         }
